@@ -39,7 +39,6 @@ func (database *DB) Open() error {
 		return fmt.Errorf("dns required")
 	}
 
-
 	conn, err := sql.Open("postgres", database.Dsn)
 	if err != nil {
 		return err
@@ -72,4 +71,3 @@ func FormatLimitOffset(limit, offset int) string {
 	}
 	return ""
 }
-

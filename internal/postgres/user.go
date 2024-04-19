@@ -23,7 +23,7 @@ func (u *UserService) FindUserById(ctx context.Context, id string) (*gohtmx.User
 	}
 	defer tx.Rollback()
 
-	user,err := findUserById(ctx, tx, id)
+	user, err := findUserById(ctx, tx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -79,8 +79,8 @@ func findUsers(ctx context.Context, tx *Tx, filter gohtmx.UserFilters) (u []*goh
 		where, args = append(where, "email = ?"), append(args, *v)
 	}
 
-	if v := filter.Active; v != nil {
-		where, args = append(where, "active = ?"), append(args, *v)
+	if v := filter.Active; v {
+		where, args = append(where, "active = ?"), append(args, v)
 	}
 
 	// Execute query

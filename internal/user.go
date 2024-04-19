@@ -19,7 +19,7 @@ type UserUpdate struct {
 	Name    *string
 	Surname *string
 	Email   *string
-	Active  *bool
+	Active  bool
 }
 
 type UserFilters struct {
@@ -27,7 +27,7 @@ type UserFilters struct {
 	Name    *string
 	Surname *string
 	Email   *string
-	Active  *bool
+	Active  bool
 	// Restrict to subset of results.
 	Offset int
 	Limit  int
