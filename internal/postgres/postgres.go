@@ -4,6 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	_ "github.com/lib/pq"
 	"time"
 )
 
@@ -36,7 +37,7 @@ func NewDB(dsn string) *DB {
 func (database *DB) Open() error {
 	// Check Dsn is defined
 	if database.Dsn == "" {
-		return fmt.Errorf("dns required")
+		return fmt.Errorf("dsn required")
 	}
 
 	conn, err := sql.Open("postgres", database.Dsn)

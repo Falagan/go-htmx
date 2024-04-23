@@ -45,6 +45,11 @@ audit:
 # DEVELOPMENT
 # ==================================================================================== #
 
+## setup dev: setup the development environment
+.PHONY: setup
+setup:
+	sh dev-env.sh
+
 ## test: run all tests
 .PHONY: test
 test:
@@ -64,12 +69,12 @@ build:
 
 ## run: run the  application
 .PHONY: run
-run: build
+run: setup build
 	/tmp/bin/${BINARY_NAME}
 
 ## run/live: run the application with reloading on file changes
 .PHONY: run/live
-run/live:
+run/live: setup
 	go run github.com/cosmtrek/air@v1.43.0 \
 		--build.cmd "make build" --build.bin "/tmp/bin/${BINARY_NAME}" --build.delay "100" \
 		--build.exclude_dir "" \

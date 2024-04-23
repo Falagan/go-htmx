@@ -6,7 +6,7 @@ import (
 )
 
 type User struct {
-	Id        string
+	Uid       string
 	Name      string
 	Surname   string
 	Email     string
@@ -23,7 +23,7 @@ type UserUpdate struct {
 }
 
 type UserFilters struct {
-	Id      *string
+	Uid     *string
 	Name    *string
 	Surname *string
 	Email   *string
@@ -34,9 +34,9 @@ type UserFilters struct {
 }
 
 type UserService interface {
-	CreateUser(ctx context.Context, user *User) (*User, error)
-	FindUserById(ctx context.Context, id string) (*User, error)
+	// CreateUser(ctx context.Context, user *User) (*User, error)
+	FindUserByUid(ctx context.Context, uid string) (*User, error)
 	FindUsers(ctx context.Context, filters UserFilters) ([]*User, error)
-	UpdateUser(ctx context.Context, user UserUpdate) (*User, error)
-	DeleteUser(ctx context.Context, id string) error
+	// UpdateUser(ctx context.Context, user UserUpdate) (*User, error)
+	// DeleteUser(ctx context.Context, id string) error
 }

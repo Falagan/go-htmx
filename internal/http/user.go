@@ -2,17 +2,17 @@ package http
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"strconv"
 
 	gohtmx "github.com/falagansoftware/go-htmx/internal"
-	"github.com/gorilla/mux"
 )
 
 // Routes
 
-func (s *Server) registerUserRoutes(r *mux.Router) {
-	r.HandleFunc("/users", s.handleUserList).Methods("GET")
+func (s *Server) registerUserRoutes() {
+	s.router.HandleFunc("/users", s.handleUserList).Methods("GET")
 }
 
 // Handlers
@@ -24,7 +24,7 @@ func (s *Server) handleUserList(w http.ResponseWriter, r *http.Request) {
 	limit, err := strconv.Atoi(r.URL.Query().Get("limit"))
 
 	if err != nil {
-		limit = 20
+		filter.Limit = 20
 	} else {
 		filter.Limit = limit
 	}
@@ -55,23 +55,25 @@ func (s *Server) handleUserList(w http.ResponseWriter, r *http.Request) {
 		filter.Email = &email
 	}
 
-	active,_ := strconv.ParseBool(r.URL.Query().Get("active"))
+	active := r.URL.Query().Get("active")
 
-	if active {
-		filter.Active = active
+	if active != "" {
+		filter.Active, _ = strconv.ParseBool(active)
+	} else {
+		filter.Active = true
 	}
 
 	// Get all users
 	users, err := s.UserService.FindUsers(r.Context(), filter)
 	if err != nil {
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		log.Printf("Internal Server Error: %v", err)
 		return
 	}
 
 	// Render the users
-	err = json.NewDecoder(r.Body).Decode(&users)
+	err = json.NewEncoder(w).Encode(users)
 	if err != nil {
-		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		return
+		log.Printf("Internal Server Error: %v", err)
 	}
+	
 }

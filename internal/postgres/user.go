@@ -2,6 +2,7 @@ package postgres
 
 import (
 	"context"
+	"fmt"
 	"strings"
 
 	gohtmx "github.com/falagansoftware/go-htmx/internal"
@@ -15,7 +16,7 @@ func NewUserService(db *DB) *UserService {
 	return &UserService{db: db}
 }
 
-func (u *UserService) FindUserById(ctx context.Context, id string) (*gohtmx.User, error) {
+func (u *UserService) FindUserByUid(ctx context.Context, uid string) (*gohtmx.User, error) {
 	tx, err := u.db.BeginTx(ctx, nil)
 
 	if err != nil {
@@ -23,7 +24,7 @@ func (u *UserService) FindUserById(ctx context.Context, id string) (*gohtmx.User
 	}
 	defer tx.Rollback()
 
-	user, err := findUserById(ctx, tx, id)
+	user, err := findUserByUid(ctx, tx, uid)
 	if err != nil {
 		return nil, err
 	}
@@ -47,8 +48,8 @@ func (u *UserService) FindUsers(ctx context.Context, filters gohtmx.UserFilters)
 
 // Helpers
 
-func findUserById(ctx context.Context, tx *Tx, id string) (*gohtmx.User, error) {
-	users, _, err := findUsers(ctx, tx, gohtmx.UserFilters{Id: &id})
+func findUserByUid(ctx context.Context, tx *Tx, uid string) (*gohtmx.User, error) {
+	users, _, err := findUsers(ctx, tx, gohtmx.UserFilters{Uid: &uid})
 
 	if err != nil {
 		return nil, err
@@ -63,40 +64,36 @@ func findUsers(ctx context.Context, tx *Tx, filter gohtmx.UserFilters) (u []*goh
 	// Where clause based on filters props
 	where, args := []string{"1=1"}, []interface{}{}
 
-	if v := filter.Id; v != nil {
-		where, args = append(where, "id = ?"), append(args, *v)
+	if v := filter.Uid; v != nil {
+		condition := fmt.Sprintf("uid = '%v'", *v)
+		where, args = append(where, condition), append(args, *v)
 	}
 
 	if v := filter.Name; v != nil {
-		where, args = append(where, "name = ?"), append(args, *v)
+		condition := fmt.Sprintf("name = '%v'", *v)
+		where, args = append(where, condition), append(args, *v)
 	}
 
 	if v := filter.Surname; v != nil {
-		where, args = append(where, "surname = ?"), append(args, *v)
+		condition := fmt.Sprintf("surname = '%v'", *v)
+		where, args = append(where, condition), append(args, *v)
 	}
 
 	if v := filter.Email; v != nil {
-		where, args = append(where, "email = ?"), append(args, *v)
+		condition := fmt.Sprintf("email = '%v'", *v)
+		where, args = append(where, condition), append(args, *v)
 	}
 
 	if v := filter.Active; v {
-		where, args = append(where, "active = ?"), append(args, v)
+		condition := fmt.Sprintf("active = '%v'", v)
+		where, args = append(where, condition), append(args, true)
 	}
 
 	// Execute query
-	rows, err := tx.QueryContext(ctx, `
-		SELECT 
-			id, 
-			name, 
-			surname, 
-			email, 
-			active, 
-			created_at, 
-			updated_at 
-		FROM users 
-		WHERE `+strings.Join(where, " AND ")+`
-		ORDER BY id ASC
-		`+FormatLimitOffset(filter.Limit, filter.Offset), args...)
+	query := `SELECT uid, name, surname, email, active, created_at, updated_at FROM users WHERE ` + strings.Join(where, " AND ") + ` ORDER BY uid ASC ` + FormatLimitOffset(filter.Limit, filter.Offset)
+
+	rows, err := tx.QueryContext(ctx, query)
+
 
 	if err != nil {
 		return nil, 0, err
@@ -110,7 +107,7 @@ func findUsers(ctx context.Context, tx *Tx, filter gohtmx.UserFilters) (u []*goh
 
 	for rows.Next() {
 		var user gohtmx.User
-		err := rows.Scan(&user.Id, &user.Name, &user.Surname, &user.Email, &user.Active, &user.CreatedAt, &user.UpdatedAt)
+		err := rows.Scan(&user.Uid, &user.Name, &user.Surname, &user.Email, &user.Active, &user.CreatedAt, &user.UpdatedAt)
 		if err != nil {
 			return nil, 0, err
 		}
