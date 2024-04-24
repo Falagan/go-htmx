@@ -1,0 +1,85 @@
+/* Table styles */
+.table {
+  display: table;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Table rows container */
+.table__rows-container {
+  display: table-row-group; /* Use table-row-group to maintain table layout */
+}
+
+/* Table row styles */
+.table__row {
+  display: table-row;
+}
+
+/* Table header row */
+.table__row--header {
+  font-weight: var(--font-weight-bold);
+  color: var(--text-color);
+  background-color: var(--background-color);
+}
+
+.table__cell__header__icon {
+  position: absolute;
+}
+
+/* Table cell styles */
+.table__cell {
+  display: table-cell;
+  padding: var(--spacing-1);
+  border-bottom: 1px solid var(--text-color);
+  vertical-align: middle;
+}
+
+.table__cell--menu {
+ cursor: pointer;
+}
+
+
+
+/* Responsive styles for tablet */
+@media (max-width: 768px) {
+
+  /* Hide table rows in tablet view */
+  .table__row {
+    display: block;
+    border-bottom: 1px solid var(--text-color);
+    /* Add border between rows */
+    margin-bottom: var(--spacing-1);
+    /* Add margin between rows */
+  }
+
+  /* Adjust table cells for tablet view */
+  .table__cell {
+    display: block;
+    border: none;
+    /* Remove border between cells */
+    padding: var(--spacing-2) 0;
+    /* Adjust cell padding */
+  }
+
+  /* Hide table header in tablet view */
+  .table__row--header {
+    display: none;
+  }
+
+  /* Display field names before values in tablet view */
+  .table__cell::before {
+    content: attr(data-label);
+    font-weight: var(--font-weight-bold);
+    margin-right: var(--spacing-1);
+  }
+}
+
+/* Hover effects for both desktop and tablet views */
+.table__row:hover {
+  background-color: var(--accent-color);
+  color: var(--background-color);
+}
+
+.table__row--header:hover {
+  cursor: pointer;
+}

@@ -1,0 +1,10 @@
+/* Global System */
+@import url("./global.css");
+@import url("./button.css");
+@import url("./form.css");
+@import url("./table.css");
+@import url("./utilities.css");
+/* Components Styles */
+@import url("./layout.css");
+@import url("./header.css");
+@import url("./footer.css");

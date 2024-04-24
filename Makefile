@@ -1,6 +1,7 @@
 # Change these variables as necessary.
 MAIN_PACKAGE_PATH := ./cmd/gohtmxs
 BINARY_NAME := gohtmx
+SHELL := /bin/bash
 
 # ==================================================================================== #
 # HELPERS
@@ -45,10 +46,21 @@ audit:
 # DEVELOPMENT
 # ==================================================================================== #
 
+## clean templ: remove go html templates
+.PHONY: clean/templ
+clean/templ:
+	rm -rf internal/http/html/*.go
+
+## build templ: generate go html templates
+.PHONY: build/templ
+build/templ:
+	templ generate \
+		-path internal/http/html
+
 ## setup dev: setup the development environment
 .PHONY: setup
 setup:
-	sh dev-env.sh
+	source dev-env.sh
 
 ## test: run all tests
 .PHONY: test
@@ -63,23 +75,24 @@ test/cover:
 
 ## build: build the application
 .PHONY: build
-build:
+build: 
 	# Include additional build steps, like TypeScript, SCSS or Tailwind compilation here...
 	go build -o=/tmp/bin/${BINARY_NAME} ${MAIN_PACKAGE_PATH}
 
 ## run: run the  application
 .PHONY: run
-run: setup build
+run: setup clean/templ build/templ build
 	/tmp/bin/${BINARY_NAME}
 
 ## run/live: run the application with reloading on file changes
 .PHONY: run/live
-run/live: setup
+run/live: clean/templ build/templ
 	go run github.com/cosmtrek/air@v1.43.0 \
 		--build.cmd "make build" --build.bin "/tmp/bin/${BINARY_NAME}" --build.delay "100" \
 		--build.exclude_dir "" \
 		--build.include_ext "go, tpl, tmpl, html, css, scss, js, ts, sql, jpeg, jpg, gif, png, bmp, svg, webp, ico" \
 		--misc.clean_on_exit "true"
+		--build.post_cmd templ generate
 
 
 # ==================================================================================== #

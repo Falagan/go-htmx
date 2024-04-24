@@ -1,0 +1,70 @@
+package html
+
+import (
+	"github.com/falagansoftware/go-htmx/internal"
+)
+
+var fields = []string{"name", "surname", "email", "created_at", "updated_at", "active"}
+
+templ UserList(users []*gohtmx.User, sortField string, sortOrder string) {
+	@Base() {
+		<h1>Usuarios</h1>
+		<div id="users-table" class="table">
+			<div class="table__row table__row--header">
+				@UserListHeader(fields, sortField, sortOrder)
+			</div>
+			<div id="users-list" class="table__rows-container">
+				@UserListBody(users)
+			</div>
+		</div>
+	}
+}
+
+templ UserListSync(users []*gohtmx.User, sortField string, sortOrder string) {
+	<div id="users-table" class="table">
+		<div class="table__row table__row--header">
+			@UserListHeader(fields, sortField, sortOrder)
+		</div>
+		<div id="users-list" class="table__rows-container">
+			@UserListBody(users)
+		</div>
+	</div>
+}
+
+templ UserListBody(users []*gohtmx.User) {
+	for _, user := range users {
+		<div class="table__row">
+			<input type="hidden" class="table__cell" value={ user.Uid }/>
+			<div class="table__cell">{ user.Name }</div>
+			<div class="table__cell">{ user.Surname }</div>
+			<div class="table__cell">{ user.Email }</div>
+			<div class="table__cell">{ user.CreatedAt.Format("02/01/06 15:04") }</div>
+			<div class="table__cell">{ user.UpdatedAt.Format("02/01/06 15:04") }</div>
+			if user.Active {
+				<div class="table__cell"><img src="/assets/icons/done.svg" alt="SVG Image" /></div>
+			} else {
+				<div class="table__cell"><img src="/assets/icons/cancel.svg" alt="SVG Image" /></div>
+			}
+			<div class="table__cell table__cell--menu"><img src="/assets/icons/more_vert.svg" alt="SVG Image" hx-delete/></div>
+		</div>
+	}
+}
+
+templ UserListHeader(fields []string, sortField string, order string) {
+	for _, field := range fields {
+		if field == sortField {
+			if order == "ASC" {
+				<div class="table__cell" hx-get={ "/users/filter?sort=" + field + "&order=DESC" } hx-trigger="click" hx-target="#users-table">
+					{ field }<img class="table__cell__header__icon" src="/assets/icons/expand_less.svg"/>
+				</div>
+			} else {
+				<div class="table__cell" hx-get={ "/users/filter" } hx-trigger="click" hx-target="#users-table">
+					{ field }<img class="table__cell__header__icon" src="/assets/icons/expand_more.svg"/>
+				</div>
+			}
+		} else {
+			<div class="table__cell" hx-get={ "/users/filter?sort=" + field + "&order=ASC" } hx-trigger="click" hx-target="#users-table">{ field }</div>
+		}
+	}
+	<div class="table__cell"></div>
+}

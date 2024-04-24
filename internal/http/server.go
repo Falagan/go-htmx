@@ -28,29 +28,29 @@ func NewServer(address string, port int, options ...Option) *Server {
 		Address: address,
 		Port:    port,
 	}
-
+	// Server options
 	for _, option := range options {
 		option(s)
 	}
-
 	// Handle if Panic
 	s.router.Use(s.reportPanic)
 	// Log Request
 	s.router.Use(s.logRequest)
-	// Attach router
-	// s.server.Handler = s.router
-
-	// Register Router for unauthenticated routes
-	// r := s.router.PathPrefix("/").Subrouter()
-	// r.Use(s.requiredNoAuth)
+	// Statics
+	s.serveStatics()
+	// Routes
 	s.registerUserRoutes()
 	return s
 }
 
 func (s *Server) ListenAndServe() error {
-	// h.Handle("/metrics", promhttp.Handler())
 	url := s.URL()
 	return http.ListenAndServe(url, s.router)
+}
+
+func (s *Server) serveStatics() {
+	fs := http.StripPrefix("/assets/",http.FileServer(http.Dir("internal/http/assets")))
+	s.router.PathPrefix("/assets/").Handler(fs)
 }
 
 // Options

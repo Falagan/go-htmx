@@ -31,7 +31,7 @@ func (u *UserService) FindUserByUid(ctx context.Context, uid string) (*gohtmx.Us
 	return user, nil
 }
 
-func (u *UserService) FindUsers(ctx context.Context, filters gohtmx.UserFilters) ([]*gohtmx.User, error) {
+func (u *UserService) FindUsers(ctx context.Context, filters *gohtmx.UserFilters) ([]*gohtmx.User, error) {
 	tx, err := u.db.BeginTx(ctx, nil)
 
 	if err != nil {
@@ -49,7 +49,7 @@ func (u *UserService) FindUsers(ctx context.Context, filters gohtmx.UserFilters)
 // Helpers
 
 func findUserByUid(ctx context.Context, tx *Tx, uid string) (*gohtmx.User, error) {
-	users, _, err := findUsers(ctx, tx, gohtmx.UserFilters{Uid: &uid})
+	users, _, err := findUsers(ctx, tx, &gohtmx.UserFilters{Uid: &uid})
 
 	if err != nil {
 		return nil, err
@@ -60,9 +60,11 @@ func findUserByUid(ctx context.Context, tx *Tx, uid string) (*gohtmx.User, error
 
 }
 
-func findUsers(ctx context.Context, tx *Tx, filter gohtmx.UserFilters) (u []*gohtmx.User, n int, e error) {
+func findUsers(ctx context.Context, tx *Tx, filter *gohtmx.UserFilters) (u []*gohtmx.User, n int, e error) {
 	// Where clause based on filters props
 	where, args := []string{"1=1"}, []interface{}{}
+	orderBy := "name"
+	direction := "ASC"
 
 	if v := filter.Uid; v != nil {
 		condition := fmt.Sprintf("uid = '%v'", *v)
@@ -89,11 +91,16 @@ func findUsers(ctx context.Context, tx *Tx, filter gohtmx.UserFilters) (u []*goh
 		where, args = append(where, condition), append(args, true)
 	}
 
+	if v := filter.Sort; v != "" {
+		orderBy = fmt.Sprintf("ORDER BY %v", filter.Sort)
+	}
+
+	if v := filter.Order; v != "" {
+		direction = v
+	}
 	// Execute query
-	query := `SELECT uid, name, surname, email, active, created_at, updated_at FROM users WHERE ` + strings.Join(where, " AND ") + ` ORDER BY uid ASC ` + FormatLimitOffset(filter.Limit, filter.Offset)
-
+	query := `SELECT uid, name, surname, email, active, created_at, updated_at FROM users WHERE ` + strings.Join(where, " AND ") + ` ` + orderBy + ` ` + direction + ` ` + FormatLimitOffset(filter.Limit, filter.Offset)
 	rows, err := tx.QueryContext(ctx, query)
-
 
 	if err != nil {
 		return nil, 0, err
@@ -102,7 +109,6 @@ func findUsers(ctx context.Context, tx *Tx, filter gohtmx.UserFilters) (u []*goh
 	defer rows.Close()
 
 	// Map rows to struct
-
 	users := make([]*gohtmx.User, 0)
 
 	for rows.Next() {

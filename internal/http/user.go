@@ -1,23 +1,64 @@
 package http
 
 import (
-	"encoding/json"
 	"log"
 	"net/http"
 	"strconv"
 
 	gohtmx "github.com/falagansoftware/go-htmx/internal"
+	html "github.com/falagansoftware/go-htmx/internal/http/html"
 )
 
 // Routes
 
 func (s *Server) registerUserRoutes() {
 	s.router.HandleFunc("/users", s.handleUserList).Methods("GET")
+	s.router.HandleFunc("/users/filter", s.handleUserListFilter).Methods("GET")
 }
 
 // Handlers
 
 func (s *Server) handleUserList(w http.ResponseWriter, r *http.Request) {
+	// Filter
+	filter := getUserFilters(r)
+	// Get all users
+	users, err := s.UserService.FindUsers(r.Context(), filter)
+	log.Print(filter)
+	if err != nil {
+		log.Printf("Internal Server Error: %v", err)
+		return
+	}
+	// Render Users
+	view := html.UserList(users, filter.Sort, filter.Order)
+	err = view.Render(r.Context(), w)
+	if err != nil {
+		log.Printf("Internal Server Error: %v", err)
+		return
+	}
+}
+
+func (s *Server) handleUserListFilter(w http.ResponseWriter, r *http.Request) {
+	// Filter
+	filter := getUserFilters(r)
+	// Get all users
+	users, err := s.UserService.FindUsers(r.Context(), filter)
+	log.Print(filter)
+	if err != nil {
+		log.Printf("Internal Server Error: %v", err)
+		return
+	}
+	// Render Users
+	view := html.UserListSync(users, filter.Sort, filter.Order)
+	err = view.Render(r.Context(), w)
+	if err != nil {
+		log.Printf("Internal Server Error: %v", err)
+		return
+	}
+}
+
+// Helpers
+
+func getUserFilters(r *http.Request) *gohtmx.UserFilters {
 	// Filters
 	filter := gohtmx.UserFilters{}
 
@@ -59,21 +100,23 @@ func (s *Server) handleUserList(w http.ResponseWriter, r *http.Request) {
 
 	if active != "" {
 		filter.Active, _ = strconv.ParseBool(active)
+	}
+
+	sort := r.URL.Query().Get("sort")
+
+	if sort != "" {
+		filter.Sort = sort
 	} else {
-		filter.Active = true
+		filter.Sort = "name"
 	}
 
-	// Get all users
-	users, err := s.UserService.FindUsers(r.Context(), filter)
-	if err != nil {
-		log.Printf("Internal Server Error: %v", err)
-		return
+	order := r.URL.Query().Get("order")
+
+	if order != "" {
+		filter.Order = order
+	} else {
+		filter.Order = "ASC"
 	}
 
-	// Render the users
-	err = json.NewEncoder(w).Encode(users)
-	if err != nil {
-		log.Printf("Internal Server Error: %v", err)
-	}
-	
+	return &filter
 }

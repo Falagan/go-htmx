@@ -40,7 +40,7 @@ func NewMain() *Main {
 	config := NewConfig()
 	return &Main{
 		DB:         postgres.NewDB(config.DB.Dsn),
-		HTTPServer: http.NewServer(config.HTTPServer.Address, config.HTTPServer.Port),
+		HTTPServer: http.NewServer(config.HTTPServer.Address, config.HTTPServer.Port, http.WithTimeout(1000)),
 	}
 }
 

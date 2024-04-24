@@ -1,0 +1,49 @@
+/* Form block */
+.form {
+    margin-bottom: var(--spacing-1);
+    /* Adjust margin as needed */
+}
+
+/* Form control element */
+.form__control {
+    padding: var(--spacing-1);
+    /* Changed to use defined variable */
+    border: 1px solid var(--text-color);
+    /* Use a variable for border color */
+    border-radius: var(--rounded);
+    /* Changed to use defined variable */
+    box-sizing: border-box;
+    /* Cross-browser compatibility */
+}
+
+/* Documentation and Guidelines */
+/* Tablet */
+@media (min-width: 768px) {
+
+    /* Add responsive utility classes */
+    .form__control--flex-sm-row {
+        flex-direction: row;
+    }
+
+    .form__control--flex-sm-column {
+        flex-direction: column;
+    }
+
+    /* Add more responsive utilities as needed */
+}
+
+/* Accessibility Enhancements */
+/* Ensure color contrast, focus states, etc. */
+/* Example of focus state */
+.form__control:focus {
+    outline: 2px solid var(--accent-color);
+    /* Use a variable for focus outline */
+}
+
+/* Theme Customization */
+/* Allow theme customization variables or options */
+/* Example of custom background color */
+.form--custom-background {
+    background-color: var(--background-color);
+    /* Use a variable for background color */
+}

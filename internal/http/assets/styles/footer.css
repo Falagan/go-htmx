@@ -1,0 +1,76 @@
+/* Footer block */
+.footer {
+    background-color: var(--primary-color);
+    color: white;
+    padding: var(--spacing-4);
+    /* Changed to use defined variable */
+}
+
+/* Footer container element */
+.footer__container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Footer links block */
+.footer__links {
+    display: flex;
+}
+
+/* Footer link element */
+.footer__link {
+    color: white;
+    text-decoration: none;
+    margin-right: var(--spacing-4);
+    /* Changed to use defined variable */
+}
+
+/* Hover effect for footer link */
+.footer__link:hover {
+    text-decoration: underline;
+}
+
+/* Footer info block */
+.footer__info {
+    text-align: right;
+}
+
+/* Footer info paragraph element */
+.footer__info p {
+    margin-bottom: var(--spacing-1);
+    /* Changed to use defined variable */
+    font-size: var(--spacing-1);
+    /* Changed to use defined variable */
+}
+
+/* Footer info small element */
+.footer__info small {
+    font-size: var(--spacing-1);
+    /* Changed to use defined variable */
+}
+
+/* Media Queries */
+/* Tablet */
+@media (max-width: 768px) {
+    .footer__container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .footer__links {
+        margin-bottom: var(--spacing-2);
+    }
+
+    .footer__info {
+        text-align: left;
+    }
+}
+
+/* Mobile */
+@media (max-width: 576px) {
+    .footer__link {
+        margin-right: var(--spacing-2);
+        /* Adjust margin for mobile screens */
+    }
+}

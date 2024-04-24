@@ -1,0 +1,31 @@
+/* Main container block */
+.container {
+    padding: var(--spacing-2);
+    /* Changed to use defined variable */
+}
+
+/* Main container inner container element */
+.main__container {
+    max-width: 75rem;
+    /* Changed to use defined variable */
+    margin: 0 auto;
+}
+
+/* Media Queries */
+/* Tablet */
+@media (max-width: 768px) {
+    .main__container {
+        max-width: 100%;
+        /* Adjust max-width for tablet screens */
+        padding: 0 var(--spacing-1);
+        /* Adjust padding for tablet screens */
+    }
+}
+
+/* Mobile */
+@media (max-width: 576px) {
+    .main__container {
+        padding: 0 var(--spacing-1);
+        /* Adjust padding for mobile screens */
+    }
+}

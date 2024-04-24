@@ -1,0 +1,33 @@
+/* Button block */
+.btn {
+    padding: var(--spacing-1) var(--spacing-2);
+    border: none;
+    border-radius: var(--rounded);
+    cursor: pointer;
+}
+
+/* Button primary modifier */
+.btn--primary {
+    background-color: var(--primary-color);
+    color: #fff;
+}
+
+/* Button primary hover state */
+.btn--primary:hover {
+    background-color: var(--secondary-color);
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .btn {
+        padding: var(--spacing-1) var(--spacing-2);
+        /* Adjust padding for tablet screens */
+    }
+}
+
+@media (max-width: 576px) {
+    .btn {
+        padding: var(--spacing-1) var(--spacing-2);
+        /* Adjust padding for mobile screens */
+    }
+}
