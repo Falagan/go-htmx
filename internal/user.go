@@ -39,6 +39,7 @@ type UserService interface {
 	// CreateUser(ctx context.Context, user *User) (*User, error)
 	FindUserByUid(ctx context.Context, uid string) (*User, error)
 	FindUsers(ctx context.Context, filters *UserFilters) ([]*User, error)
+	FindUsersGlobally(ctx context.Context, search *string) ([]*User, error)
 	// UpdateUser(ctx context.Context, user UserUpdate) (*User, error)
 	// DeleteUser(ctx context.Context, id string) error
 }

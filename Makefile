@@ -46,6 +46,11 @@ audit:
 # DEVELOPMENT
 # ==================================================================================== #
 
+## build tailwind styles: buil tailwind styles in watch mode
+.PHONY: build/tailwind
+build/tailwind:
+	~/tailwindcss -i ./internal/http/assets/tailwind.css -o ./internal/http/assets/styles/styles.css
+
 ## clean templ: remove go html templates
 .PHONY: clean/templ
 clean/templ:
@@ -57,10 +62,10 @@ build/templ:
 	templ generate \
 		-path internal/http/html
 
-## setup dev: setup the development environment
-.PHONY: setup
-setup:
-	source dev-env.sh
+## format templ: format templates files
+.PHONY: fmt/templ
+fmt/templ:
+	templ fmt internal/http/html
 
 ## test: run all tests
 .PHONY: test
@@ -81,19 +86,17 @@ build:
 
 ## run: run the  application
 .PHONY: run
-run: setup clean/templ build/templ build
+run: clean/templ build/templ build
 	/tmp/bin/${BINARY_NAME}
 
 ## run/live: run the application with reloading on file changes
 .PHONY: run/live
-run/live: clean/templ build/templ
+run/live: build/tailwind clean/templ fmt/templ build/templ
 	go run github.com/cosmtrek/air@v1.43.0 \
 		--build.cmd "make build" --build.bin "/tmp/bin/${BINARY_NAME}" --build.delay "100" \
 		--build.exclude_dir "" \
-		--build.include_ext "go, tpl, tmpl, html, css, scss, js, ts, sql, jpeg, jpg, gif, png, bmp, svg, webp, ico" \
+		--build.include_ext "go, tpl, tmpl,html, css, scss, js, ts, sql, jpeg, jpg, gif, png, bmp, svg, webp, ico" \
 		--misc.clean_on_exit "true"
-		--build.post_cmd templ generate
-
 
 # ==================================================================================== #
 # OPERATIONS

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>My HTML Project</title>
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+</head>
+<body>
+    <h1>Welcome to htmX Demo Project</h1>
+    <button hx-get="https://rickandmortyapi.com/api/character" hx-target="#response-div">
+        Click Here
+    </button>
+    <div>Hello</div>
+    <div id="response-div"></div>
+</body>
+</html>

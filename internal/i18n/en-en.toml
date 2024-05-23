@@ -1,0 +1,8 @@
+name = "name"
+surname = "surname"
+email = "email"
+created_at = "created"
+updated_at = "updated"
+user = "user"
+users = "users"
+active = "active"

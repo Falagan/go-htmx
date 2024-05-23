@@ -23,7 +23,7 @@ func Base() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<!doctype html><html lang=\"en\" data-theme=\"dark\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><meta name=\"description\" content=\"Go/Echo+Templ: User List App as an example of a project structured in layers, use of &#39;Templ&#39; Template language and frontend with HTMx technology\"><meta name=\"google\" content=\"notranslate\"><link rel=\"stylesheet\" type=\"text/css\" href=\"/assets/styles/main.css\"><title>Project Structure Demo</title><script src=\"https://unpkg.com/htmx.org@1.9.10\" integrity=\"sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC\" crossorigin=\"anonymous\"></script></head><script>\n\t\t\thtmx.logAll();\n\t\t</script><body hx-boost=\"true\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<!doctype html><html lang=\"en\" data-theme=\"dark\"><head><meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"><meta name=\"description\" content=\"Go/Echo+Templ: User List App as an example of a project structured in layers, use of &#39;Templ&#39; Template language and frontend with HTMx technology\"><meta name=\"google\" content=\"notranslate\"><link rel=\"stylesheet\" type=\"text/css\" href=\"/assets/styles/styles.css\"><title>Go Htmx Demo</title><script src=\"https://unpkg.com/htmx.org@1.9.10\" integrity=\"sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC\" crossorigin=\"anonymous\"></script></head><script>\n\t\t\thtmx.logAll();\n\t\t</script><body hx-boost=\"true\"><div class=\"w-full min-h-screen\"><!-- Header -->")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -31,7 +31,7 @@ func Base() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<main class=\"container main__container\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<!-- Middle Container --><div class=\"grow\"><div class=\"container mx-auto pt-0 sm:pt-8\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -39,15 +39,7 @@ func Base() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</main>")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		templ_7745c5c3_Err = Footer().Render(ctx, templ_7745c5c3_Buffer)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</body></html>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</div></div></div></body></html>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -71,7 +63,7 @@ func Header() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<header class=\"header rounded\"><div class=\"container header__container\"><div class=\"header__logo\">My Bookstore</div><nav class=\"header__nav\"><ul><li class=\"header__nav-item\"><a href=\"#\" class=\"header__nav-link\">Home</a></li><li class=\"header__nav-item\"><a href=\"#\" class=\"header__nav-link\">Books</a></li><li class=\"header__nav-item\"><a href=\"#\" class=\"header__nav-link\">About</a></li><li class=\"header__nav-item\"><a href=\"#\" class=\"header__nav-link\">Contact</a></li></ul></nav></div></header>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<header class=\"h-20 bg-appColor-500 text-white p-2 flex justify-between items-center\"><h3>Go htmx Demo</h3><h3>Options</h3></header>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -82,26 +74,16 @@ func Header() templ.Component {
 	})
 }
 
-func Footer() templ.Component {
-	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
-		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
-		if !templ_7745c5c3_IsBuffer {
-			templ_7745c5c3_Buffer = templ.GetBuffer()
-			defer templ.ReleaseBuffer(templ_7745c5c3_Buffer)
-		}
-		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var3 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var3 == nil {
-			templ_7745c5c3_Var3 = templ.NopComponent
-		}
-		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<footer class=\"footer\"><div class=\"container footer__container\"><div class=\"footer__links\"><a href=\"#\" class=\"footer__link\">About</a> <a href=\"#\" class=\"footer__link\">Terms of Service</a> <a href=\"#\" class=\"footer__link\">Privacy Policy</a> <a href=\"#\" class=\"footer__link\">Help Center</a></div><div class=\"footer__info\"><p>Company Name</p><p>123 Main Street, City, Country</p><small>&copy; 2024 Company Name. All rights reserved.</small></div></div></footer>")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		if !templ_7745c5c3_IsBuffer {
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteTo(templ_7745c5c3_W)
-		}
-		return templ_7745c5c3_Err
-	})
-}
+// templ Footer() {
+// 	<footer class="bg-gray-800 text-white py-4">
+// 		<div class="container mx-auto">
+// 			<a href="#" class="footer__link">About</a>
+// 			<a href="#" class="footer__link">Terms of Service</a>
+// 			<a href="#" class="footer__link">Privacy Policy</a>
+// 			<a href="#" class="footer__link">Help Center</a>
+// 			<p>Company Name</p>
+// 			<p>123 Main Street, City, Country</p>
+// 			<small>&copy; 2024 Company Name. All rights reserved.</small>
+// 		</div>
+// 	</footer>
+// }

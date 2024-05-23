@@ -2,8 +2,7 @@
 .footer {
     background-color: var(--primary-color);
     color: white;
-    padding: var(--spacing-4);
-    /* Changed to use defined variable */
+    width: 100%;
 }
 
 /* Footer container element */
@@ -23,7 +22,7 @@
     color: white;
     text-decoration: none;
     margin-right: var(--spacing-4);
-    /* Changed to use defined variable */
+
 }
 
 /* Hover effect for footer link */
@@ -39,15 +38,15 @@
 /* Footer info paragraph element */
 .footer__info p {
     margin-bottom: var(--spacing-1);
-    /* Changed to use defined variable */
+
     font-size: var(--spacing-1);
-    /* Changed to use defined variable */
+
 }
 
 /* Footer info small element */
 .footer__info small {
     font-size: var(--spacing-1);
-    /* Changed to use defined variable */
+
 }
 
 /* Media Queries */

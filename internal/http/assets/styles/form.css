@@ -7,11 +7,11 @@
 /* Form control element */
 .form__control {
     padding: var(--spacing-1);
-    /* Changed to use defined variable */
+
     border: 1px solid var(--text-color);
     /* Use a variable for border color */
     border-radius: var(--rounded);
-    /* Changed to use defined variable */
+
     box-sizing: border-box;
     /* Cross-browser compatibility */
 }

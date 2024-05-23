@@ -1,13 +1,31 @@
 /* Table styles */
+.table__container {
+  height: calc(100vh - 268px);
+  overflow-y: auto;
+}
+
 .table {
   display: table;
   width: 100%;
   border-collapse: collapse;
 }
 
+.table__header {
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--spacing-1);
+  flex-wrap: wrap;
+}
+
+.table__header--title {
+  font-size: 1.5rem;
+  margin-bottom: var(--spacing-1);
+}
+
 /* Table rows container */
 .table__rows-container {
-  display: table-row-group; /* Use table-row-group to maintain table layout */
+  display: table-row-group;
+  /* Use table-row-group to maintain table layout */
 }
 
 /* Table row styles */
@@ -17,6 +35,8 @@
 
 /* Table header row */
 .table__row--header {
+  position: sticky;
+  top: 0;
   font-weight: var(--font-weight-bold);
   color: var(--text-color);
   background-color: var(--background-color);
@@ -35,12 +55,17 @@
 }
 
 .table__cell--menu {
- cursor: pointer;
+  cursor: pointer;
 }
 
+.table__global__search {
+  margin-left: auto;
+  margin-top: var(--spacing-2);
+  height: var(--spacing-4);
+  min-width: var(--spacing-32);
+}
 
-
-/* Responsive styles for tablet */
+/* Responsive styles for tablet and mobile*/
 @media (max-width: 768px) {
 
   /* Hide table rows in tablet view */
@@ -72,6 +97,12 @@
     font-weight: var(--font-weight-bold);
     margin-right: var(--spacing-1);
   }
+
+  .table__global__search {
+    width: 100%;
+    margin-left: 0;
+  }
+
 }
 
 /* Hover effects for both desktop and tablet views */

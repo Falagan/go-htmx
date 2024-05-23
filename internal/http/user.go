@@ -14,13 +14,16 @@ import (
 func (s *Server) registerUserRoutes() {
 	s.router.HandleFunc("/users", s.handleUserList).Methods("GET")
 	s.router.HandleFunc("/users/filter", s.handleUserListFilter).Methods("GET")
+	s.router.HandleFunc("/users/search", s.handleUserListSearch).Methods("POST")
 }
 
 // Handlers
 
 func (s *Server) handleUserList(w http.ResponseWriter, r *http.Request) {
+	//Lang
+	lang := newLang(r)
 	// Filter
-	filter := getUserFilters(r)
+	filter := newUserFilters(r)
 	// Get all users
 	users, err := s.UserService.FindUsers(r.Context(), filter)
 	log.Print(filter)
@@ -29,7 +32,7 @@ func (s *Server) handleUserList(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// Render Users
-	view := html.UserList(users, filter.Sort, filter.Order)
+	view := html.UserList(users, filter.Sort, filter.Order, s.i18n.LangT(lang))
 	err = view.Render(r.Context(), w)
 	if err != nil {
 		log.Printf("Internal Server Error: %v", err)
@@ -38,8 +41,10 @@ func (s *Server) handleUserList(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *Server) handleUserListFilter(w http.ResponseWriter, r *http.Request) {
+	//Lang
+	lang := newLang(r)
 	// Filter
-	filter := getUserFilters(r)
+	filter := newUserFilters(r)
 	// Get all users
 	users, err := s.UserService.FindUsers(r.Context(), filter)
 	log.Print(filter)
@@ -48,7 +53,27 @@ func (s *Server) handleUserListFilter(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// Render Users
-	view := html.UserListSync(users, filter.Sort, filter.Order)
+	view := html.UserListSync(users, filter.Sort, filter.Order, s.i18n.LangT(lang))
+	err = view.Render(r.Context(), w)
+	if err != nil {
+		log.Printf("Internal Server Error: %v", err)
+		return
+	}
+}
+
+func (s *Server) handleUserListSearch(w http.ResponseWriter, r *http.Request) {
+	//Lang
+	lang := newLang(r)
+	r.ParseForm() // Parses the request body
+	search := r.Form.Get("search")
+	// Get all users
+	users, err := s.UserService.FindUsersGlobally(r.Context(), &search)
+	if err != nil {
+		log.Printf("Internal Server Error: %v", err)
+		return
+	}
+	// Render Users
+	view := html.UserListSync(users, "", "", s.i18n.LangT(lang))
 	err = view.Render(r.Context(), w)
 	if err != nil {
 		log.Printf("Internal Server Error: %v", err)
@@ -58,9 +83,13 @@ func (s *Server) handleUserListFilter(w http.ResponseWriter, r *http.Request) {
 
 // Helpers
 
-func getUserFilters(r *http.Request) *gohtmx.UserFilters {
+func newLang(r *http.Request) string {
+	return r.URL.Query().Get("lang")
+}
+
+func newUserFilters(r *http.Request) *gohtmx.UserFilters {
 	// Filters
-	filter := gohtmx.UserFilters{}
+	filter := &gohtmx.UserFilters{}
 
 	limit, err := strconv.Atoi(r.URL.Query().Get("limit"))
 
@@ -106,17 +135,13 @@ func getUserFilters(r *http.Request) *gohtmx.UserFilters {
 
 	if sort != "" {
 		filter.Sort = sort
-	} else {
-		filter.Sort = "name"
-	}
+	} 
 
 	order := r.URL.Query().Get("order")
 
 	if order != "" {
 		filter.Order = order
-	} else {
-		filter.Order = "ASC"
-	}
+	} 
 
-	return &filter
+	return filter
 }

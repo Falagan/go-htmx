@@ -1,0 +1,8 @@
+name = "nombre"
+surname = "apellido"
+email = "correo"
+created_at = "creado"
+updated_at = "actualizado"
+user = "usuario"
+users = "usuarios"
+active = "activo"

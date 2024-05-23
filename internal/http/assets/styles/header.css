@@ -2,8 +2,8 @@
 .header {
     background-color: var(--primary-color);
     color: white;
-    padding: var(--spacing-2);
-    /* Changed to use defined variable */
+    width: 100%;
+    height: var(--spacing-8);
 }
 
 /* Header container element */
@@ -17,7 +17,6 @@
 .header__logo {
     font-size: 1.5rem;
     font-weight: var(--font-weight-bold);
-    /* Changed to use defined variable */
 }
 
 /* Header navigation block */
@@ -28,7 +27,6 @@
 /* Header navigation item element */
 .header__nav-item {
     margin-right: var(--spacing-4);
-    /* Changed to use defined variable */
 }
 
 /* Header navigation link element */

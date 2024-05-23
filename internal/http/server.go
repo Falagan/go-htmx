@@ -7,6 +7,8 @@ import (
 	"time"
 
 	gohtmx "github.com/falagansoftware/go-htmx/internal"
+	translator "github.com/falagansoftware/go-htmx/internal/i18n"
+
 	"github.com/gorilla/mux"
 )
 
@@ -15,6 +17,7 @@ type Server struct {
 	router  *mux.Router
 	Address string
 	Port    int
+	i18n    *translator.Translator
 	// Services used in routes
 	UserService gohtmx.UserService
 }
@@ -27,6 +30,7 @@ func NewServer(address string, port int, options ...Option) *Server {
 		router:  mux.NewRouter(),
 		Address: address,
 		Port:    port,
+		i18n:    translator.NewTranslator(translator.WithDefaultLang("en-en")),
 	}
 	// Server options
 	for _, option := range options {
@@ -49,7 +53,7 @@ func (s *Server) ListenAndServe() error {
 }
 
 func (s *Server) serveStatics() {
-	fs := http.StripPrefix("/assets/",http.FileServer(http.Dir("internal/http/assets")))
+	fs := http.StripPrefix("/assets/", http.FileServer(http.Dir("internal/http/assets")))
 	s.router.PathPrefix("/assets/").Handler(fs)
 }
 
@@ -59,6 +63,13 @@ func WithTimeout(timeout time.Duration) Option {
 	return func(server *Server) {
 		server.server.WriteTimeout = timeout
 	}
+}
+
+func WithI18n() Option {
+	return func(server *Server) {
+		// Load translations
+	}
+
 }
 
 // Middlewares
